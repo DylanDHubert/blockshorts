@@ -1,18 +1,20 @@
-// YOUTUBE SHORTS BLOCKER - CONTENT SCRIPT
-// DETECTS YOUTUBE SHORTS URLS AND REDIRECTS TO PREVIOUS PAGE
+// YOUTUBE SHORTS AND POST BLOCKER - CONTENT SCRIPT
+// DETECTS YOUTUBE SHORTS AND SINGLE POST URLS AND REDIRECTS TO PREVIOUS PAGE
 
 (function() {
     'use strict';
     
-    // FUNCTION TO CHECK IF CURRENT URL IS A YOUTUBE SHORT
-    function isYouTubeShort() {
+    // FUNCTION TO CHECK IF CURRENT URL IS A YOUTUBE SHORT OR A SINGLE POST
+    function isBlockedYouTubePage() {
         const currentUrl = window.location.href;
-        return currentUrl.includes('youtube/shorts/') || currentUrl.includes('youtube.com/shorts');
+        const isShort = currentUrl.includes('youtube/shorts/') || currentUrl.includes('youtube.com/shorts');
+        const isPost = currentUrl.includes('youtube.com/post/');
+        return isShort || isPost;
     }
     
     // FUNCTION TO REDIRECT TO PREVIOUS PAGE
     function redirectToPreviousPage() {
-        console.log('YOUTUBE SHORTS DETECTED - REDIRECTING TO PREVIOUS PAGE');
+        console.log('YOUTUBE SHORT OR POST DETECTED - REDIRECTING TO PREVIOUS PAGE');
         
         // TRY TO GO BACK IN BROWSER HISTORY
         if (window.history.length > 1) {
@@ -25,13 +27,13 @@
     
     // FUNCTION TO HANDLE URL CHANGES (FOR SPA NAVIGATION)
     function handleUrlChange() {
-        if (isYouTubeShort()) {
+        if (isBlockedYouTubePage()) {
             redirectToPreviousPage();
         }
     }
     
     // INITIAL CHECK WHEN SCRIPT LOADS
-    if (isYouTubeShort()) {
+    if (isBlockedYouTubePage()) {
         redirectToPreviousPage();
     }
     
